@@ -19,9 +19,9 @@ const ExtLinks = [
 const NavLogo = () => {
   return (
     <div className="flex w-full items-center justify-between gap-8 md:w-auto">
-      <a className="flex" href="/">
+      <NavLink className="flex" to="/">
         <span className="logo">ρV</span>
-      </a>
+      </NavLink>
     </div>
   );
 };
