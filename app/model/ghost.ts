@@ -44,4 +44,7 @@ export interface Tag {
   meta_description?: string;
 
   feature_image?: string;
+  count?: {
+    posts: number;
+  };
 }

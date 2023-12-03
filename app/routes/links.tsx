@@ -3,7 +3,7 @@ import { Outlet } from '@remix-run/react';
 
 import { Layout } from '~/components/Layout';
 
-const DocsPage: React.FC = () => {
+const LinkPage: React.FC = () => {
   return (
     <Layout>
       <Outlet />
@@ -11,4 +11,4 @@ const DocsPage: React.FC = () => {
   );
 };
 
-export default DocsPage;
+export default LinkPage;

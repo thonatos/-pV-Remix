@@ -1,8 +1,9 @@
 import { json } from '@remix-run/node';
-import { useLoaderData, Link } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 
 import type { MetaFunction } from '@vercel/remix';
 import type { LoaderFunctionArgs } from '@remix-run/node';
+import { TagCloud } from 'react-tagcloud';
 
 import { api, Post, Tag } from '~/model/ghost';
 
@@ -37,10 +38,8 @@ export const loader = async (params: LoaderFunctionArgs) => {
       limit: 15,
       filter: 'visibility:public',
     })
-    .fields({
-      id: true,
-      name: true,
-      slug: true,
+    .include({
+      'count.posts': true,
     })
     .fetch();
 
@@ -53,23 +52,45 @@ export const loader = async (params: LoaderFunctionArgs) => {
 export default function Index() {
   const { posts, tags } = useLoaderData<typeof loader>();
 
+  const data =
+    tags.map((tag) => {
+      return {
+        value: tag.name,
+        count: tag.count?.posts || 0,
+      };
+    }) || [];
+
   return (
     <Layout>
       <div className="home-index divide-y-[1px]">
         <div>
-          <div className="my-4">FEATURED CATEGORY</div>
-          <div className="grid grid-cols-4 md:grid-cols-7 gap-2 mb-4">
-            {tags.map((tag) => {
+          <TagCloud
+            minSize={32}
+            maxSize={64}
+            tags={data}
+            className="min-h-[100px] mb-4 text-center"
+            shuffle={true}
+            renderer={(tag, size, color) => {
               return (
-                <div
-                  key={tag.id}
-                  className="bg-gray-50 py-4 text-center text-slate-400"
-                >
-                  <Link to={`/docs?tag=${tag.name}`}>{tag.name}</Link>
-                </div>
+                <Link to={`/docs?tag=${tag.value}`}>
+                  <span
+                    key={tag.value}
+                    style={{
+                      color: color,
+                      fontSize: size,
+                      animation: 'blinker 3s linear infinite',
+                      animationDelay: `${Math.random() * 2}s`,
+                      margin: '3px',
+                      padding: '6px',
+                      display: 'inline-block',
+                    }}
+                  >
+                    {tag.value}
+                  </span>
+                </Link>
               );
-            })}
-          </div>
+            }}
+          />
         </div>
 
         <div>
@@ -77,19 +98,16 @@ export default function Index() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
             {posts.map((post) => {
               return (
-                <div
-                  key={post.id}
-                  className="bg-gray-50 text-center text-slate-400 rounded"
-                >
-                  <img
-                    src={post.feature_image}
-                    alt=""
-                    className="object-cover h-48 w-96"
-                  />
-                  <div className="p-2">
-                    <Link to={`/docs/${post.slug}`}>{post.title}</Link>
+                <Link to={`/docs/${post.slug}`} key={post.id}>
+                  <div className="bg-gray-50 text-center text-slate-400 rounded">
+                    <img
+                      src={post.feature_image}
+                      alt=""
+                      className="object-cover h-48 w-96"
+                    />
+                    <div className="p-2">{post.title}</div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

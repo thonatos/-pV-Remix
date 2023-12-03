@@ -52,6 +52,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.7
     version: 18.2.17
+  '@types/react-tagcloud':
+    specifier: ^2.3.0
+    version: 2.3.0
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.31)
@@ -67,6 +70,9 @@ devDependencies:
   prettier:
     specifier: ^3.0.3
     version: 3.1.0
+  react-tagcloud:
+    specifier: ^2.3.3
+    version: 2.3.3(react@18.2.0)
   tailwindcss:
     specifier: ^3.3.4
     version: 3.3.5
@@ -1963,6 +1969,15 @@ packages:
     resolution:
       {
         integrity: sha512-rvrT/M7Df5eykWFxn6MYt5Pem/Dbyc1N8Y0S9Mrkw2WFCRiqUgw9P7ul2NpwsXCSM1DVdENzdG9J5SreqfAIWg==,
+      }
+    dependencies:
+      '@types/react': 18.2.38
+    dev: true
+
+  /@types/react-tagcloud@2.3.0:
+    resolution:
+      {
+        integrity: sha512-S/eAkMmsHn+SxEUc35XvykNIN5K8rh7vTd5PV4TMPh0FwWU8hzfHZfo0PSKnFPayWNvxOljBsQSe4W9qUuI/uw==,
       }
     dependencies:
       '@types/react': 18.2.38
@@ -7462,6 +7477,13 @@ packages:
       }
     dev: true
 
+  /randomcolor@0.6.2:
+    resolution:
+      {
+        integrity: sha512-Mn6TbyYpFgwFuQ8KJKqf3bqqY9O1y37/0jgSK/61PUxV4QfIMv0+K2ioq8DfOjkBslcjwSzRfIDEXfzA9aCx7A==,
+      }
+    dev: true
+
   /range-parser@1.2.1:
     resolution:
       {
@@ -7544,6 +7566,21 @@ packages:
       '@remix-run/router': 1.13.0
       react: 18.2.0
     dev: false
+
+  /react-tagcloud@2.3.3(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-4E2lTU7wYU0bisi2x3xInueufHzYFkSuqoKsY0Ky8U4Ki60StVX0MicYtsiScvY2QcFbSULWt6evbEwYVKXl4g==,
+      }
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      prop-types: 15.8.1
+      randomcolor: 0.6.2
+      react: 18.2.0
+      seedrandom: 3.0.5
+      shuffle-array: 1.0.1
+    dev: true
 
   /react@18.2.0:
     resolution:
@@ -7883,6 +7920,13 @@ packages:
       loose-envify: 1.4.0
     dev: false
 
+  /seedrandom@3.0.5:
+    resolution:
+      {
+        integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==,
+      }
+    dev: true
+
   /semver@6.3.1:
     resolution:
       {
@@ -7998,6 +8042,13 @@ packages:
         integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==,
       }
     engines: { node: '>=8' }
+    dev: true
+
+  /shuffle-array@1.0.1:
+    resolution:
+      {
+        integrity: sha512-0TFRU8zVQaLatWKr0/czo19VyPNgb/a3sBc1GAjVfivfzEGaS54vueNgtAu/8/pW7EM/VF5fwq9zgpLdGyRmVw==,
+      }
     dev: true
 
   /side-channel@1.0.4:

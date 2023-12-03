@@ -1,11 +1,12 @@
 import React from 'react';
 import { json } from '@remix-run/node';
-import { Link, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 
 import type { MetaFunction } from '@vercel/remix';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 
 import { api, Post } from '~/model/ghost';
+import { List } from '~/components/Post/List';
 
 export const meta: MetaFunction = () => {
   return [
@@ -31,6 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       title: true,
       slug: true,
       published_at: true,
+      reading_time: true,
     })
     .fetch();
 
@@ -50,22 +52,7 @@ const DocIndex: React.FC = () => {
         <h1>Docs</h1>
       </div>
       <div className="docs-content py-4">
-        <div className="flex flex-col divide-y">
-          {posts.map((post) => {
-            const { id, slug, title } = post;
-            return (
-              <div key={id} className="flex flex-row justify-between py-3">
-                <Link to={`/docs/${slug}`}>{title}</Link>
-                <span>
-                  {post.published_at &&
-                    new Intl.DateTimeFormat('en-US').format(
-                      new Date(post.published_at)
-                    )}
-                </span>
-              </div>
-            );
-          })}
-        </div>
+        <List posts={posts} />
       </div>
     </div>
   );
