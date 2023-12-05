@@ -12,11 +12,8 @@ export const List: React.FC<{
       {posts.map((post) => {
         const { id, slug, title } = post;
         return (
-          <Link to={`/docs/${slug}`}>
-            <div
-              key={id}
-              className="flex flex-row justify-between items-center py-3"
-            >
+          <Link to={`/docs/${slug}`} key={id}>
+            <div className="flex flex-row justify-between items-center py-3">
               <div className="flex align-middle justify-center items-center">
                 <div className="text-sm text-green-600 w-32 uppercase">
                   {formatDateTime('en-US', post.published_at)}

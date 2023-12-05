@@ -1,13 +1,12 @@
 import { json } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 
+import { TagCloud } from 'react-tagcloud';
+import { api, Post, Tag } from '~/model/ghost';
+import { Layout } from '~/components/Layout';
+
 import type { MetaFunction } from '@vercel/remix';
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { TagCloud } from 'react-tagcloud';
-
-import { api, Post, Tag } from '~/model/ghost';
-
-import { Layout } from '~/components/Layout';
 
 export const meta: MetaFunction = () => {
   return [

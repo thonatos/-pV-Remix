@@ -1,6 +1,7 @@
 import React from 'react';
-import { NavLink } from '@remix-run/react';
 import classnames from 'classnames';
+import { Link, NavLink } from '@remix-run/react';
+import { DarkThemeToggle } from 'flowbite-react';
 
 const NavLinks = [
   { name: 'Home', href: '/' },
@@ -55,9 +56,9 @@ const NavMain = () => {
       <div className="flex items-center gap-2">
         {ExtLinks.map((link, index) => {
           return (
-            <a
+            <Link
               key={index}
-              href={link.href}
+              to={link.href}
               className="h-10 w-10 place-items-center text-black hover:text-gray-600 grid"
               title={link.name}
             >
@@ -70,9 +71,12 @@ const NavMain = () => {
                   height: '24px',
                 }}
               />
-            </a>
+            </Link>
           );
         })}
+
+        {/* theme toggle */}
+        <DarkThemeToggle className="p-[2px]" />
       </div>
     </div>
   );

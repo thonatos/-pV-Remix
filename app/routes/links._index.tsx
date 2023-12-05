@@ -17,7 +17,7 @@ const links = [
     name: 'Xeggex',
     url: 'https://xeggex.bull.im/',
     type: 'crypto',
-  },  
+  },
 ];
 
 const LinkIndex: React.FC = () => {

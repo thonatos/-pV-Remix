@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
+import { ThemeModeScript } from 'flowbite-react';
 import { Analytics } from '@vercel/analytics/react';
 import type { LinksFunction } from '@vercel/remix';
 
@@ -37,6 +38,7 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <ThemeModeScript />
       </head>
       <body className="min-h-screen w-full overflow-x-hidden antialiased bg-gray-100 text-gray-900">
         <Outlet />
