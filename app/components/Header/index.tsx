@@ -7,6 +7,7 @@ const NavLinks = [
   { name: 'Home', href: '/' },
   { name: 'Docs', href: '/docs' },
   { name: 'Links', href: '/links' },
+  { name: 'Nostr', href: '/nostr' },
 ];
 
 const ExtLinks = [
