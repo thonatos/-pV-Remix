@@ -60,7 +60,17 @@ const NostrIndex: React.FC = () => {
       return;
     }
 
-    const subscribe = async () => {};
+    const subscribe = async () => {
+      const filter = new Filter();
+      client
+        .subscribe([filter])
+        .then((event) => {
+          console.log(event);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
 
     subscribe();
 
