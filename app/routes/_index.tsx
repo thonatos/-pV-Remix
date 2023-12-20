@@ -71,7 +71,7 @@ export default function Index() {
             shuffle={true}
             renderer={(tag, size, color) => {
               return (
-                <Link to={`/docs?tag=${tag.value}`}>
+                <Link to={`/docs?tag=${tag.value}`} key={tag.key}>
                   <span
                     key={tag.value}
                     style={{

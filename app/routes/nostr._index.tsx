@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
+  initLogger,
   loadWasmAsync,
   Keys,
   Client,
   PublicKey,
   EventBuilder,
-  initLogger,
   Filter,
+  Timestamp,
+  Event,
+  nip04_decrypt,
 } from '@rust-nostr/nostr-sdk';
 import type { MetaFunction } from '@vercel/remix';
 import { Button } from 'flowbite-react';
@@ -25,9 +28,13 @@ const NOSRT_ASSETS_NPUB_KEY =
   'npub1dy7n73dcrs0n24ec87u4tuagevkpjnzyl7aput69vmn8saemgnuq0a4n6y';
 
 const NostrIndex: React.FC = () => {
+  // page
+  const [loaded, setLoaded] = useState(false);
+
+  // nostr
   const [keys, setKeys] = useState<Keys>();
   const [client, setClient] = useState<Client>();
-  const [loaded, setLoaded] = useState(false);
+  const [connected, setConnected] = useState(false);
 
   // init
   useEffect(() => {
@@ -49,27 +56,51 @@ const NostrIndex: React.FC = () => {
 
       await client.addRelay('wss://relay.nostrassets.com');
       await client.connect();
+      setConnected(true);
     };
 
     init();
+
+    return () => {
+      setKeys(undefined);
+      setClient(undefined);
+      setConnected(false);
+    };
   }, [loaded]);
 
   // subscribe
   useEffect(() => {
-    if (!keys || !client) {
+    if (!keys || !client || !connected) {
       return;
     }
 
+    const handleEvent = (relayUrl: string, event: Event) => {      
+      console.log('relayUrl', relayUrl);
+      console.log('event', event);
+
+      if (event.kind == BigInt(4)) {
+        try {
+          const content = nip04_decrypt(
+            keys.secretKey,
+            event.pubkey,
+            event.content
+          );
+          console.log('message:', content);
+        } catch (error) {
+          console.log('Impossible to decrypt DM:', error);
+        }
+      }
+    };
+
     const subscribe = async () => {
-      const filter = new Filter();
-      client
-        .subscribe([filter])
-        .then((event) => {
-          console.log(event);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      const filter = new Filter()
+        .pubkey(keys.publicKey)
+        .kind(BigInt(4))
+        .since(Timestamp.now());
+      console.log('filter', filter, filter.asJson());
+
+      await client.subscribe([filter]);
+      await client.handleEventNotifications(handleEvent);
     };
 
     subscribe();
@@ -79,7 +110,7 @@ const NostrIndex: React.FC = () => {
         console.log('unsubscribe.');
       });
     };
-  }, [keys, client]);
+  }, [keys, client, connected]);
 
   // load
   useEffect(() => {
@@ -107,8 +138,7 @@ const NostrIndex: React.FC = () => {
       'balance'
     ).toEvent(keys);
 
-    console.log('event', event);
-    // Send custom event to all relays
+    console.log('event', event);    
     await client.sendEvent(event);
   }, [keys, client]);
 
