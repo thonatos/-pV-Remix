@@ -6,12 +6,16 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteError,
 } from '@remix-run/react';
+import { Provider } from 'jotai';
 import { ThemeModeScript } from 'flowbite-react';
 import { Analytics } from '@vercel/analytics/react';
-import type { LinksFunction } from '@vercel/remix';
 
+import { nostrStore } from '~/store/nostr';
 import styles from './tailwind.css';
+
+import type { LinksFunction } from '@vercel/remix';
 
 export const links: LinksFunction = () => {
   const defaultLinks = [
@@ -41,11 +45,31 @@ export default function App() {
         <ThemeModeScript />
       </head>
       <body className="min-h-screen w-full overflow-x-hidden antialiased bg-gray-100 text-gray-900">
-        <Outlet />
+        <Provider store={nostrStore}>
+          <Outlet />
+        </Provider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
         <Analytics />
+      </body>
+    </html>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  console.error(error);
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {/* add the UI you want your users to see */}
+        <Scripts />
       </body>
     </html>
   );

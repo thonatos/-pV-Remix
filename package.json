@@ -36,6 +36,7 @@
     "eslint-config-prettier": "^9.0.0",
     "flowbite": "^2.2.0",
     "flowbite-react": "^0.7.0",
+    "jotai": "^2.6.0",
     "postcss": "^8.4.32",
     "prettier": "^3.0.3",
     "react-tagcloud": "^2.3.3",

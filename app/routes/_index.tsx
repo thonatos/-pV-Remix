@@ -73,7 +73,7 @@ export default function Index() {
               return (
                 <Link to={`/docs?tag=${tag.value}`} key={tag.key}>
                   <span
-                    key={tag.value}
+                    key={tag.key}
                     style={{
                       color: color,
                       fontSize: size,

@@ -1,18 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-  initLogger,
-  loadWasmAsync,
-  Keys,
-  Client,
-  PublicKey,
-  EventBuilder,
-  Filter,
-  Timestamp,
-  Event,
-  nip04_decrypt,
-} from '@rust-nostr/nostr-sdk';
+import React, { useCallback } from 'react';
+import { Button, ButtonGroup } from 'flowbite-react';
+import { useMount } from '~/hooks/useMount';
+import { useAtom } from 'jotai';
+import { keysAtom, initAtom, createAtom, queryAtom } from '~/store/nostr';
+
 import type { MetaFunction } from '@vercel/remix';
-import { Button } from 'flowbite-react';
+
+const IS_SSR = typeof window === 'undefined';
 
 export const meta: MetaFunction = () => {
   return [
@@ -24,138 +18,51 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-const NOSRT_ASSETS_NPUB_KEY =
-  'npub1dy7n73dcrs0n24ec87u4tuagevkpjnzyl7aput69vmn8saemgnuq0a4n6y';
-
 const NostrIndex: React.FC = () => {
-  // page
-  const [loaded, setLoaded] = useState(false);
+  const [keys] = useAtom(keysAtom);
+  const [_init, init] = useAtom(initAtom);
+  const [_query, query] = useAtom(queryAtom);
+  const [_create, create] = useAtom(createAtom);
 
-  // nostr
-  const [keys, setKeys] = useState<Keys>();
-  const [client, setClient] = useState<Client>();
-  const [connected, setConnected] = useState(false);
-
-  // init
-  useEffect(() => {
-    if (!loaded) {
-      return;
-    }
-
-    const init = async () => {
-      await loadWasmAsync();
-      initLogger();
-
-      const keys = Keys.generate();
-      console.log('keys', keys);
-      setKeys(keys);
-
-      const client = new Client(keys);
-      setClient(client);
-      console.log('client', client);
-
-      await client.addRelay('wss://relay.nostrassets.com');
-      await client.connect();
-      setConnected(true);
-    };
-
-    init();
-
-    return () => {
-      setKeys(undefined);
-      setClient(undefined);
-      setConnected(false);
-    };
-  }, [loaded]);
-
-  // subscribe
-  useEffect(() => {
-    if (!keys || !client || !connected) {
-      return;
-    }
-
-    const handleEvent = (relayUrl: string, event: Event) => {      
-      console.log('relayUrl', relayUrl);
-      console.log('event', event);
-
-      if (event.kind == BigInt(4)) {
-        try {
-          const content = nip04_decrypt(
-            keys.secretKey,
-            event.pubkey,
-            event.content
-          );
-          console.log('message:', content);
-        } catch (error) {
-          console.log('Impossible to decrypt DM:', error);
-        }
-      }
-    };
-
-    const subscribe = async () => {
-      const filter = new Filter()
-        .pubkey(keys.publicKey)
-        .kind(BigInt(4))
-        .since(Timestamp.now());
-      console.log('filter', filter, filter.asJson());
-
-      await client.subscribe([filter]);
-      await client.handleEventNotifications(handleEvent);
-    };
-
-    subscribe();
-
-    return () => {
-      client.unsubscribe().then(() => {
-        console.log('unsubscribe.');
-      });
-    };
-  }, [keys, client, connected]);
-
-  // load
-  useEffect(() => {
-    if (loaded) {
-      return;
-    }
-
-    setLoaded(true);
-
-    return () => {
-      setLoaded(false);
-    };
+  const getSecretKey = useCallback(() => {
+    const sk = localStorage.getItem('nostr_keys') || '';
+    return sk;
   }, []);
 
-  // query
-  const query = useCallback(async () => {
-    if (!client || !keys) {
+  useMount(() => {
+    if (IS_SSR) {
       return;
     }
 
-    let public_key = PublicKey.fromBech32(NOSRT_ASSETS_NPUB_KEY);
-    let event = EventBuilder.newEncryptedDirectMsg(
-      keys,
-      public_key,
-      'balance'
-    ).toEvent(keys);
-
-    console.log('event', event);    
-    await client.sendEvent(event);
-  }, [keys, client]);
+    const secretKey = getSecretKey();
+    init({ sk: secretKey });
+  });
 
   return (
-    <div className="links-index">
-      <div className="links-header border-b border-gray-100 pb-4">
+    <div className="nostr-index">
+      <div className="nostr-header border-b border-gray-100 pb-4">
         <h1>Nostr</h1>
       </div>
-      <div className="links-content py-4">
-        <div>
-          <Button
-            onClick={() => {
-              query();
-            }}
-          >
-            Query Balance
-          </Button>
+      <div className="nostr-content py-4">
+        <div className="p-4">{keys?.publicKey.toBech32()}</div>
+        <div className="p-4">
+          <ButtonGroup>
+            <Button
+              onClick={() => {
+                create();
+              }}
+            >
+              Create Account
+            </Button>
+
+            <Button
+              onClick={() => {
+                query();
+              }}
+            >
+              Query Balance
+            </Button>
+          </ButtonGroup>
         </div>
       </div>
     </div>
