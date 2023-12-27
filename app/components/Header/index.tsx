@@ -6,8 +6,9 @@ import { DarkThemeToggle } from 'flowbite-react';
 const NavLinks = [
   { name: 'Home', href: '/' },
   { name: 'Docs', href: '/docs' },
-  { name: 'Links', href: '/links' },
+  { name: 'Demo', href: '/demo' },
   { name: 'Nostr', href: '/nostr' },
+  { name: 'Links', href: '/links' },
 ];
 
 const ExtLinks = [

@@ -1,3 +1,4 @@
+import colors from 'tailwindcss/colors';
 import type { Config } from 'tailwindcss';
 
 export default {
@@ -6,6 +7,9 @@ export default {
     './node_modules/flowbite-react/**/*.js',
   ],
   theme: {
+    colors: {
+      blue: colors.lightBlue,
+    },
     extend: {},
   },
   darkMode: 'class',

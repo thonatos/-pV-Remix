@@ -48,6 +48,7 @@ const NostrIndex: React.FC = () => {
         <div className="p-4">
           <ButtonGroup>
             <Button
+              color="gray"
               onClick={() => {
                 create();
               }}
@@ -56,6 +57,7 @@ const NostrIndex: React.FC = () => {
             </Button>
 
             <Button
+              color="gray"
               onClick={() => {
                 query();
               }}
